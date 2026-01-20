@@ -1,5 +1,5 @@
-{% comment %} {% extends "base.html" %} {% endcomment %}
-{% comment %} {% block content %} {% endcomment %}
+{% extends "mymoneymate/base.html" %}
+{% block content %}
 <section class="dashboard-header">
   <div>
     <h1 class="dashboard-title">Expenses</h1>
@@ -152,7 +152,8 @@ const ResetData = () => {
 const loadData =async () =>{
 document.getElementById("expenses-body").innerHTML=""
 try {
-  const res = await fetch("/transactions", {
+  const transactionsUrl = "{% url 'moneyTrans' %}";
+  const res = await fetch(transactionsUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });
@@ -232,7 +233,7 @@ document.getElementById("isExpense").addEventListener("change", ()=>{
       isExpense = document.getElementById("isExpense").value
       date = document.getElementById("date").value
       console.log(title, category, amount, isExpense, date)
-        url = "/add_transaction?title="+title+"&category="+category+"&amount="+amount+"&isExpense="+isExpense+"&dateAdded="+date
+        url = "{% url 'addTransaction' %}" + "?title="+title+"&category="+category+"&amount="+amount+"&isExpense="+isExpense+"&dateAdded="+date
 
 
       try{
@@ -255,72 +256,4 @@ const res = await fetch(url, {
     })
   })
   </script>
-{% comment %} {% endblock %} {% endcomment %}
-
-{% block scripts %}
-<script>
-  // function appendExpenseRow(expense) {
-  //   const tbody = document.getElementById("expenses-body");
-  //   const noRow = document.getElementById("no-expense-row");
-  //   if (noRow) noRow.remove();
-
-  //   const tr = document.createElement("tr");
-  //   tr.innerHTML = `
-  //     <td>${expense.title}</td>
-  //     <td>${expense.category || "-"}</td>
-  //     <td>${expense.method}</td>
-  //     <td class="expense-amount negative">-₹ ${expense.amount.toFixed(2)}</td>
-  //     <td>${expense.date_display}</td>
-  //   `;
-  //   tbody.prepend(tr);
-  // }
-
-  // document.addEventListener("DOMContentLoaded", () => {
-  //   const form = document.getElementById("expense-form");
-
-  //   form.addEventListener("submit", async (e) => {
-  //     e.preventDefault();
-
-  //     const payload = {
-  //       title: document.getElementById("title").value,
-  //       category: document.getElementById("category").value,
-  //       amount: document.getElementById("amount").value,
-  //       method: document.getElementById("method").value,
-  //       date: document.getElementById("date").value || null,
-  //     };
-
-  //     try {
-  //       const res = await fetch("/api/expenses", {
-  //         method: "POST",
-  //         headers: { "Content-Type": "application/json" },
-  //         body: JSON.stringify(payload),
-  //       });
-
-  //       const data = await res.json();
-
-  //       if (!data.ok) {
-  //         alert(data.error || "Failed to save expense");
-  //         return;
-  //       }
-
-  //       appendExpenseRow(data.expense);
-  //       form.reset();
-  //     } catch (err) {
-  //       console.error(err);
-  //       alert("Network error while saving expense");
-  //     }
-  //   });
-  // });
-
-  document.addEventListener("DOMContentLoaded", ()=>{
-    document.getElementById("addTransaction").addEventListener("click", () => {
-      title = document.getElementById("title").value
-      category = document.getElementById("category").value
-      amount = document.getElementById("amount").value
-      isExpense = document.getElementById("isExpense").value
-      date = document.getElementById("date").value
-      console.log(title, category, amount, isExpense, date)
-    })
-  })
-</script>
 {% endblock %}

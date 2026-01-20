@@ -1,5 +1,5 @@
-{% comment %} {% extends "mymoneymate/base.html" %} {% endcomment %}
-{% comment %} {% block content %} {% endcomment %}
+{% extends "mymoneymate/base.html" %}
+{% block content %}
 <style>
 .delete-goal-btn {
   transition: all .2s;
@@ -62,7 +62,7 @@
       <div class="card-inner">
         <div class="card-header">
           <span class="card-title">Recent Transactions</span>
-          <a href="/transactions" class="card-tag">View all</a>
+          <a href="{% url 'moneyTrans' %}" class="card-tag">View all</a>
         </div>
 
         <div class="expense-list" id="recent-expense-list">
@@ -76,20 +76,20 @@
                   </span>
                   <span class="expense-meta">
 
-                    {% comment %} {{ e.dateAdded.strftime('%d %b') }} {% endcomment %}
+                    {{ e.dateAdded|date:"d M" }}
                     {% if e.category %} · {{ e.category }}{% endif %}
                   </span>
                 </div>
                 <div style="text-align: right">
-                  {% comment %} {% if e.isExpense %} {% endcomment %}
+                  {% if e.isExpense %}
                   <div class="expense-amount negative">
-                    {% comment %} -₹ {{ '%.2f'|format(e.amount) }} {% endcomment %}
+                    -₹ {{ e.amount|floatformat:2 }}
                   </div>
-                    {% comment %} {% else %} {% endcomment %}
+                    {% else %}
                   <div class="expense-amount positive">
-                    {% comment %} +₹ {{ '%.2f'|format(e.amount) }} {% endcomment %}
+                    +₹ {{ e.amount|floatformat:2 }}
                   </div>
-                    {% comment %} {% endif %} {% endcomment %}
+                    {% endif %}
                     
                   <div class="expense-meta">{{ e.typee }}</div>
                 </div>
@@ -220,16 +220,16 @@
         </div>
 
         <div class="goals-list" id="sidebar-goals">
-          {% comment %} {% if goals %} {% endcomment %}
-            {% comment %} {% for g in goals %} {% endcomment %}
-              {% comment %} {% set pct = (g.Saving / g.amount * 100) if g.amount else 0 %} {% endcomment %}
+          {% if goals %}
+            {% for g in goals %}
+              {% if g.amount %}{% widthratio g.Saving g.amount 100 as pct %}{% else %}{% with 0 as pct %}{% endwith %}{% endif %}
               <div class="goal-item">
                 <div class="goal-top">
-                  {% comment %} <span class="goal-name">{{ g.title }}</span> {% endcomment %}
+                  <span class="goal-name">{{ g.title }}</span>
                   <span class="goal-progress">
-                    {% comment %} ₹ {{ '%.0f'|format(g.Saving) }} / {{ '%.0f'|format(g.amount) }} {% endcomment %}
+                    ₹ {{ g.Saving|floatformat:0 }} / {{ g.amount|floatformat:0 }}
                   </span>
-               {% comment %} <div class="delete-goal-btn" data-goal-id="{{ g.Gid }}"> {% endcomment %}
+               <div class="delete-goal-btn" data-goal-id="{{ g.Gid }}">
   <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none"
        xmlns="http://www.w3.org/2000/svg">
     <path d="M10 12V17" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
@@ -244,13 +244,13 @@
 
                 </div>
                 <div class="progress-bar">
-                  {% comment %} <div class="progress-fill" style="width: {{ pct|round(0) }}%"></div> {% endcomment %}
+                  <div class="progress-fill" style="width: {{ pct|floatformat:0 }}%"></div>
                 </div>
               </div>
-            {% comment %} {% endfor %} {% endcomment %}
-          {% comment %} {% else %} {% endcomment %}
+            {% endfor %}
+          {% else %}
             <p class="dashboard-subtitle">No goals yet.</p>
-          {% comment %} {% endif %} {% endcomment %}
+        {% endif %}
         </div>
       </div>
     </div>
@@ -295,9 +295,16 @@ document.querySelectorAll(".delete-goal-btn").forEach(btn => {
 
 
 
-
-
-
+const rawExpenses = [
+  {% for e in allexpenses %}
+    {
+      category: "{% if e.category %}{{ e.category }}{% else %}Other{% endif %}",
+      amount: {{ e.amount|floatformat:2 }},
+      isExpense: {% if e.isExpense %}true{% else %}false{% endif %},
+      date: "{{ e.dateAdded|date:'Y-m-d' }}"
+    }{% if not forloop.last %},{% endif %}
+  {% endfor %}
+];
     const ctx = document.getElementById("expensePie");
     if (!ctx) return;
 
@@ -461,4 +468,4 @@ document.querySelectorAll(".delete-goal-btn").forEach(btn => {
   
   
 </script>
-{% comment %} {% endblock %} {% endcomment %}
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends 'mylifemate/base.html' %}
+
+{% block content %}
+
+<h1>Welcome to MyLifeMate!</h1>
+<p>Your personal life manager to keep track of your goals and daily activities.</p>
+
+
+
+
+<section class="dashboard-grid">
+  <!-- Left column -->
+  <div class="dashboard-left">
+    <!-- Balance card -->
+    <div data-redirect="money" class="card" style="margin-bottom: 0.8rem">
+      <div class="card-inner">
+        <div class="card-header">
+          <span class="card-title">MyMoneyMate</span>
+        </div>
+        <div class="card-content">Track Your Money and Expenses</div>
+      </div>
+    </div>
+
+
+    <div class="card" style="margin-bottom: 0.8rem">
+      <div class="card-inner">
+        <div class="card-header">
+          <span class="card-title">MyMoneyMate</span>
+        </div>
+        <div class="card-content">Track Your Money and Expenses</div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+     <div class="dashboard-right">
+
+
+      <div class="card" style="margin-bottom: 0.8rem">
+      <div class="card-inner">
+        <div class="card-header">
+          <span class="card-title">MyMoneyMate</span>
+        </div>
+        <div class="card-content">Track Your Money and Expenses</div>
+      </div>
+    </div>
+
+
+    <div class="card" style="margin-bottom: 0.8rem">
+      <div class="card-inner">
+        <div class="card-header">
+          <span class="card-title">MyMoneyMate</span>
+        </div>
+        <div class="card-content">Track Your Money and Expenses</div>
+      </div>
+    </div>
+    <!-- Spending chart card -->
+
+</div>
+</section>
+<script>
+
+  Array.from(document.getElementsByClassName("card")).forEach((element) => {
+    element.style.cursor = "pointer";
+    element.addEventListener("click", () => {
+      const redirectPath = element.getAttribute("data-redirect");
+      if (redirectPath) {
+        window.location.href = `/${redirectPath}`;
+      }
+    });
+  });
+
+</script>
+
+{% endblock %}

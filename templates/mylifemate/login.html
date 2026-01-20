@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "mylifemate/base.html" %}
 {% block content %}
     <div class="auth-wrapper">
       <div class="auth-card">
@@ -15,7 +15,7 @@
           <p class="auth-subtitle">
             Continue where you left off. Authentication logic to be added later.
           </p>
-    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% comment %} {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <ul class="flash-messages">
           {% for category, message in messages %}
@@ -23,9 +23,10 @@
           {% endfor %}
         </ul>
       {% endif %}
-    {% endwith %}
+    {% endwith %} {% endcomment %}  
 
           <form method="post">
+            {% csrf_token %}
             <div class="form-field">
               <label for="login-email">Email</label>
               <input
@@ -61,7 +62,7 @@
 
           <p class="auth-footer-text">
             New here?
-            <a href="/register">Create an account</a>
+            <a href="/signup">Create an account</a>
           </p>
 
           <p class="auth-footer-text" style="margin-top: 0.25rem">

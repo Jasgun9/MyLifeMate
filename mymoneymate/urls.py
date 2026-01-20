@@ -5,5 +5,9 @@ urlpatterns = [
     path('', views.index, name="moneyHome"),
     path('transactions/', views.transactions, name="moneyTrans"),
     path('goals/', views.goals, name="moneyGoals"),
+    path('addTransaction/', views.addTransaction, name="addTransaction"),
+    path('addGoal/', views.addGoal, name="addGoal"),
+    
+    
 
 ]

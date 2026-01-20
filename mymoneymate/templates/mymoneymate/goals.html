@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "mymoneymate/base.html" %}
 {% block content %}
 <section class="dashboard-header">
   <div>
@@ -23,21 +23,25 @@
       <div class="goals-list" id="goals-list">
         {% if goals %}
           {% for g in goals %}
-            {% set pct = (g.Saving / g.amount * 100) if g.amount else 0 %}
+            {% if g.amount %}
+    {% widthratio g.Saving g.amount 100 as pct %}
+{% else %}
+    {% with 0 as pct %}{% endwith %}
+{% endif %}
             <div class="goal-item"
                  data-goal-id="{{ g.Gid }}"   
                  style="cursor: pointer">
               <div class="goal-top">
                 <span class="goal-name">{{ g.title }}</span>
                 <span class="goal-progress">
-                  ₹ {{ '%.0f'|format(g.Saving) }} / {{ '%.0f'|format(g.amount) }}
+                  ₹ {{ g.Saving|floatformat:0 }} / {{ g.amount|floatformat:0 }}
                 </span>
               </div>
               <div class="progress-bar">
-                <div class="progress-fill" style="width: {{ pct|round(0) }}%"></div>
+                <div class="progress-fill" style="width: {{ pct|floatformat:0 }}%"></div>
               </div>
               <p class="dashboard-subtitle" style="margin-top: 0.25rem">
-                Created on {{ g.dateAdded.strftime('%d %b %Y') }}
+                Created on {{ g.dateAdded|date:'%d %b %Y' }}
               </p>
             </div>
           {% endfor %}
@@ -127,7 +131,7 @@
 
     try {
       // NOTE: this assumes POST /goals returns JSON list of goals
-      const res = await fetch("/goals", {
+      const res = await fetch("{% url 'moneyGoals' %}", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
       });
@@ -259,7 +263,8 @@
         const date = document.getElementById("date").value;
 
         const url =
-          "/add_goals?title=" +
+        "{% url 'addGoal' %}"+
+          "?title=" +
           encodeURIComponent(title) +
           "&amount=" +
           encodeURIComponent(amount) +
