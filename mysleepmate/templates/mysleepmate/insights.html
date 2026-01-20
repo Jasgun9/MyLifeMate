@@ -1,0 +1,173 @@
+{% extends 'mylifemate/base.html' %}
+
+{% block content %}
+
+
+{% comment %} 
+{{ daily_labels }}
+{{daily_hours}}
+{{bed_labels}}
+{{bed_times}}
+{{sleep_dist}} {% endcomment %}
+
+<section class="dashboard-grid">
+  <!-- Left column -->
+  <div class="dashboard-left">
+    <!-- Balance card -->
+    <div data-redirect="money" class="card" style="margin-bottom: 0.8rem">
+      <div class="card-inner">
+        <div class="card-header">
+          <span class="card-title">MyMoneyMate</span>
+        </div>
+        <div class="card-content"><canvas id="dailySleepChart"  height="120"></canvas>
+
+<script>
+const dailyLabels = {{ daily_labels|safe }};
+const dailyHours = {{ daily_hours|safe }};
+
+new Chart(document.getElementById('dailySleepChart'), {
+    type: 'line',
+    data: {
+        labels: dailyLabels,
+        datasets: [{
+            label: 'Hours Slept',
+            data: dailyHours,
+            borderWidth: 2,
+            tension: 0.4,
+            fill: false
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: { display: true, text: "Hours" }
+            }
+        }
+    }
+});
+</script>
+</div>
+      </div>
+    </div>
+
+
+    <div class="card" style="margin-bottom: 0.8rem">
+      <div class="card-inner">
+        <div class="card-header">
+          <span class="card-title">MyMoneyMate</span>
+        </div>
+        <div class="card-content"><canvas id="bedtimeChart"  height="120"></canvas>
+
+<script>
+const bedLabels = {{ bed_labels|safe }};
+const bedHours = {{ bed_hours|safe }};
+
+new Chart(document.getElementById('bedtimeChart'), {
+    type: 'line',
+  data: {
+    labels: bedLabels,
+    datasets: [{
+      label: "Bedtime (Hour of Day)",
+      data: bedHours,
+      tension: 0.4,
+      pointRadius: 6,
+      borderWidth: 2
+    }]
+  },
+  options: {
+    scales: {
+      y: { min: 18, max: 26 } // 6pm to 2am
+    }
+  }
+});
+</script>
+</div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+     <div class="dashboard-right">
+
+
+      <div data-redirect="sleep" class="card" style="margin-bottom: 0.8rem">
+      <div class="card-inner">
+        <div class="card-header">
+          <span class="card-title">MySleepMate</span>
+        </div>
+        <div class="card-content"><canvas id="sleepDistChart"  height="140"></canvas>
+
+<script>
+const sleepDist = {{ sleep_dist|safe }};
+
+new Chart(document.getElementById('sleepDistChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ['< 6 Hours', '6 - 8 Hours', '> 8 Hours'],
+        datasets: [{
+            data: sleepDist
+        }]
+    },
+    options: {
+        responsive: true
+    }
+});
+</script>
+</div>
+      </div>
+    </div>
+
+
+    <div class="card" style="margin-bottom: 0.8rem">
+      <div class="card-inner">
+        <div class="card-header">
+          <span class="card-title">MyMoneyMate</span>
+        </div>
+        <div class="card-content">
+                  <canvas id="sleepChart" height="240" width="400"></canvas>
+
+<script>
+const labels = {{ labels|safe }};
+const hours = {{ hours|safe }};
+
+new Chart(document.getElementById('sleepChart'), {
+    type: 'bar',   // change to 'line' if you want
+    data: {
+        labels: labels,
+        datasets: [{
+            label: 'Hours Slept',
+            data: hours,
+            borderWidth: 2,
+            borderRadius: 6,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 12,
+                title: {
+                    display: true,
+                    text: 'Hours'
+                }
+            }
+        }
+    }
+});
+</script>
+        </div>
+      </div>
+    </div>
+    <!-- Spending chart card -->
+
+</div>
+</section>
+
+
+{% endblock %}

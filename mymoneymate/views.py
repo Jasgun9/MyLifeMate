@@ -1,3 +1,4 @@
+import json
 from django.views.decorators.csrf import csrf_exempt
 from datetime import datetime
 from django.shortcuts import render
@@ -121,3 +122,26 @@ def goals(request):
     return render(request, 'mymoneymate/goals.html')
 
 
+@csrf_exempt
+def deleteGoal(request):
+    data = json.loads(request.body)
+    goal_id = data.get("goal_id")
+    try:
+        goal = Goal.objects.get(Gid=goal_id, user=request.user)
+        goal.delete()
+        return JsonResponse({"success":True,"status": "success", "message": "Goal deleted successfully."})
+    except Goal.DoesNotExist:
+        return JsonResponse({"success":False,"status": "error", "message": "Goal not found."})
+
+@csrf_exempt
+def updateGoalSaving(request):
+    data = json.loads(request.body)
+    goal_id = data.get("id")
+    saving = data.get("saved")
+    try:
+        goal = Goal.objects.get(Gid=goal_id, user=request.user)
+        goal.Saving = float(saving)
+        goal.save()
+        return JsonResponse({"ok":True,"status": "success", "message": "Goal saving updated successfully."})
+    except Goal.DoesNotExist:
+        return JsonResponse({"ok":False,"status": "error", "message": "Goal not found."})

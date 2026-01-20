@@ -24,5 +24,6 @@ urlpatterns = [
     path('signup/', views.handleSignUp, name="SignUp"),
     path('login/', views.handleLogin, name="Login"),
     path('logout/', views.handleLogout, name="Logout"),
-    path('money/', include('mymoneymate.urls'))
+    path('money/', include('mymoneymate.urls')),
+    path('sleep/', include('mysleepmate.urls'))
 ]
